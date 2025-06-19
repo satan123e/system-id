@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>System Apocalypse - Identify Terminal</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #0f0;
+      font-family: 'Courier New', Courier, monospace;
+      padding: 20px;
+    }
+    #output {
+      border: 1px solid #0f0;
+      padding: 10px;
+      min-height: 200px;
+      white-space: pre-wrap;
+      margin-top: 20px;
+    }
+    input, button, textarea {
+      background-color: #111;
+      color: #0f0;
+      border: 1px solid #0f0;
+      padding: 5px 10px;
+      font-family: 'Courier New', Courier, monospace;
+      margin-top: 5px;
+    }
+    .admin {
+      display: none;
+      margin-top: 30px;
+    }
+    .admin h2 {
+      border-bottom: 1px solid #0f0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 System Apocalypse Identify Terminal</h1>
+  <p>Enter item or monster name:</p>
+  <input type="text" id="scanInput" placeholder="e.g., Glass Widow">
+  <button onclick="identify()">SCAN</button>
+  <div id="output"></div>
+
+  <div class="admin" id="adminPanel">
+    <h2>🛠 Admin Panel</h2>
+    <input type="text" id="newKey" placeholder="Name (e.g., new monster)">
+    <br>
+    <textarea id="newEntry" rows="6" cols="50" placeholder="Scan result..."></textarea><br>
+    <button onclick="addEntry()">Add / Update Entry</button>
+  </div>
+
+  <script>
+    let database = {
+      "glass widow": `
+> SYSTEM SCAN: ██GLASS WIDOW██
+> CLASS: Mother-Class Aberration
+> STATUS: PHASE 2 - ACTIVE
+> HP: ~270 | AC: 17
+> TRAITS:
+- Time-Warp Core: Can rewind one turn as a Legendary Action.
+- Absorbs fallen entities to gain class traits temporarily.
+> LOOT INDEX:
+- Organic Relay Core
+- Mother’s Spine (Artifact)
+- Echo Thread
+
+"Hello, child. Do you remember me yet?"`,
+      "shard howler": `
+> SCAN: ENTITY - [SHARD HOWLER]
+> TYPE: System-Touched Beast
+> THREAT LEVEL: Moderate (CR 3)
+> HP: ~52 | AC: 14
+> ABILITIES:
+- Crystal Hide: Resistant to slashing/piercing (non-magical).
+- Psychic Howl: DC 14 Wisdom save or frightened.
+> DROP INDEX:
+- Bone Splinters
+- Minor Essence Residue
+- Glass Dust`,
+      "adaptive veinweave": `
+> SYSTEM SCAN: ITEM: [ADAPTIVE VEINWEAVE]
+> TYPE: ARMOR: ORGANIC LIGHTWEIGHT – TIER II
+> +1 AC | Resistance to Slashing
+> AUTO-STABILIZE ON 0HP (1x/day)
+> ORIGIN: Glass Widow Cocoon
+> WARNING: May cause DNA drift on extended use.`
+    };
+
+    function identify() {
+      const input = document.getElementById('scanInput').value.toLowerCase().trim();
+      const output = document.getElementById('output');
+      if (database[input]) {
+        output.textContent = database[input];
+      } else {
+        output.textContent = "> ERROR 404: SCAN DATA NOT FOUND\n> Try scanning a known entity...";
+      }
+    }
+
+    // Admin access
+    const ADMIN_PASS = "open-panel";
+    document.addEventListener("keydown", function(e) {
+      if (e.key === "/" && prompt("Enter admin password:") === ADMIN_PASS) {
+        document.getElementById("adminPanel").style.display = "block";
+        alert("Admin panel unlocked.");
+      }
+    });
+
+    function addEntry() {
+      const key = document.getElementById("newKey").value.toLowerCase().trim();
+      const val = document.getElementById("newEntry").value;
+      if (key && val) {
+        database[key] = val;
+        alert("Entry added/updated!");
+      } else {
+        alert("Both name and scan output required.");
+      }
+    }
+  </script>
+</body>
+</html>
